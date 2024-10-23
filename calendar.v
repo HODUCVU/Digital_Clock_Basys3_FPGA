@@ -60,10 +60,6 @@ module calendar(
     reg [4:0] day = 22;
     reg [6:0] year = 24;
     reg [6:0] century = 20;
-    // reg [3:0] month = 1;
-    // reg [4:0] day = 1;
-    // reg [6:0] year = 22;
-    // reg [6:0] century = 20;
     
     wire end_of_year;
     assign end_of_year = ((month == 12 && day == 31) & end_of_day) ? 1 : 0;
