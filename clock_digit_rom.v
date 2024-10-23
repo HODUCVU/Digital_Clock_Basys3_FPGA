@@ -1,12 +1,3 @@
-// `timescale 1ns /1ps
-///////////////////////////////////////////////////////////////////
-// Authored by David J. Marion aka FPGA Dude
-// Created on 4/13/2022
-//
-// Description: ROM containing 8x16 ascii characters for clock
-// and calendar on VGA
-///////////////////////////////////////////////////////////////////
-
 module clock_digit_rom(
 	input clk, 
 	input wire [10:0] addr,

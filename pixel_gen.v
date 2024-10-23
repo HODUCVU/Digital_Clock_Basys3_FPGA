@@ -1,11 +1,3 @@
-// `timescale 1ns / 1ps
-///////////////////////////////////////////////////////////////////////
-// Authored by David J. Marion aka FPGA Dude
-// Created on 4/13/2022
-//
-// Purpose: receive clock and calendar BCD values, write clock and
-// calendar on VGA screen
-///////////////////////////////////////////////////////////////////////
 `include "clock_digit_rom.v"
 module pixel_gen(
     input clk,

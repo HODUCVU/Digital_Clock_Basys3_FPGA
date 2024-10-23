@@ -1,11 +1,3 @@
-// `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Authored by David J. Marion aka FPGA Dude
-// Created on 4/14/2022
-//
-// Synopsis: Simulating the a binary clock with a calendar. The binary clock
-// drives the calendar through the w_end_of_day signal.
-//////////////////////////////////////////////////////////////////////////////////
 `include "calendar.v"
 `include "new_binary_clock.v"
 module top_clk_cal(

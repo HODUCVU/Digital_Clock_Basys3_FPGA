@@ -1,19 +1,3 @@
-// `timescale 1ns / 1ps
-////////////////////////////////////////////////////////////////////////////////
-// Authored by David J. Marion aka FPGA Dude
-// Created on 4/11/2022
-//
-// For use with a system input clock signal of 100MHz
-//
-// Description: This module contains a binary clock, complete with button
-// debouncing circuitry for incrementing hour and minute. This module
-// outputs seconds, minutes, and hours values in BCD format, as well as
-// the 1Hz signal generated to increment the seconds counter.
-//
-// For incrementing hours and minutes using buttons: hours and minutes 
-// are incremented at posedge 1Hz signal while the corresponding button is held.
-////////////////////////////////////////////////////////////////////////////////
-
 module new_binary_clock(
     input clk_100MHz,                   // sys clock
     input reset,                        // reset clock

@@ -1,23 +1,3 @@
-// `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Reference Book: 
-// Chu, Pong P.
-// Wiley, 2008
-// "FPGA Prototyping by Verilog Examples: Xilinx Spartan-3 Version" 
-// 
-// Adapted for the Basys 3 by David J. Marion
-// Comments by David J. Marion
-//
-// FOR USE WITH AN FPGA THAT HAS A 100MHz CLOCK SIGNAL ONLY.
-// VGA Mode
-// 640x480 pixels VGA screen with 25MHz pixel rate based on 60 Hz refresh rate
-// 800 pixels/line * 525 lines/screen * 60 screens/second = ~25.2M pixels/second
-//
-// A 25MHz signal will suffice. The Basys 3 has a 100MHz signal available, so a
-// 25MHz tick is created for syncing the pixel counts, pixel tick, horiz sync, 
-// vert sync, and video on signals.
-//////////////////////////////////////////////////////////////////////////////////
-
 module vga_controller(
     input clk_100MHz,   // from Basys 3
     input reset,        // system reset

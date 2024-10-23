@@ -1,13 +1,3 @@
-// `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Authored by David J. Marion aka FPGA Dude
-// Created on 4/13/2022
-//
-// Description: This module contains a calendar that is driven by hours, minutes,
-// seconds, and an am_or_pm signal from the binary clock core new_binary_clock.v.
-//
-//////////////////////////////////////////////////////////////////////////////////
-
 module calendar(
     input clk_100MHz,           // 100MHz from Basys 3
     input tick_1Hz,             // 1Hz signal from binary clock module
