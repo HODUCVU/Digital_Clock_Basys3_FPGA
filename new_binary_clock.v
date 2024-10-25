@@ -77,7 +77,7 @@ module new_binary_clock(
         if(reset)
             minutes_ctr <= 6'b0;
         else begin
-            if(db_min | (seconds_ctr == 59))
+            if((db_min && ~set_alarm) | (seconds_ctr == 59))
                 if(minutes_ctr == 59)
                     minutes_ctr <= 6'b0;
                 else
@@ -95,7 +95,7 @@ module new_binary_clock(
         if(reset)
             hours_ctr <= 5'h17;
         else begin
-            if(db_hr | (minutes_ctr == 59 && seconds_ctr == 59))
+            if((db_hr && ~set_alarm) | (minutes_ctr == 59 && seconds_ctr == 59))
                 if(hours_ctr == 23)
                     hours_ctr <= 5'h0;
                 else
