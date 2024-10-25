@@ -3,14 +3,17 @@
 
 module digital_clock_tb();
     reg clk_100MHz, reset;
-    reg inc_hr, inc_min;
-
+    reg tick_hr, tick_min;
+    reg set_alarm, alarm_en;
+    wire buzzer;
     wire hsync, vsync;
     wire [11:0] rgb;
 
     localparam T = 2;
     top clock (.clk_100MHz(clk_100MHz), .reset(reset),
-        .tick_hr(inc_hr), .tick_min(inc_min), 
+        .tick_hr(tick_hr), .tick_min(tick_min), 
+        .set_alarm(set_alarm), .alarm_en(alarm_en),
+        .buzzer(buzzer),
         .hsync(hsync), .vsync(vsync),
         .rgb(rgb));
     
@@ -27,16 +30,16 @@ module digital_clock_tb();
     // Simulate
     initial begin 
         reset <= 1;
-        inc_hr <= 0; inc_min <= 0; 
+        tick_hr <= 0; tick_min <= 0; 
         #(2*T);
         reset <= 0;
         // modify minutes and hours
-        inc_min <= 1;
-        #(14*T*4)
-        inc_min <= 0;
-        inc_hr <= 1;
-        #(14*T*4)
-        inc_hr <= 0;
+        // tick_min <= 1;
+        // #(14*T*4)
+        // tick_min <= 0;
+        // tick_hr <= 1;
+        // #(14*T*4)
+        // tick_hr <= 0;
         #(1000000*T*2); // 200000
         $finish;
     end

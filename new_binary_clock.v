@@ -13,7 +13,7 @@ module new_binary_clock(
     output [3:0] hr_1s, hr_10s,         // BCD outputs for hours
     //
     output [3:0] alarm_min_1s, alarm_min_10s,       // Alarm outputs for minutes
-    output [3:0] alarm_hr_1s, alarm_hr_10s,         // Alarm outputs for hours
+    output [3:0] alarm_hr_1s, alarm_hr_10s         // Alarm outputs for hours
     //
     );
     
