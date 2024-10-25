@@ -1,20 +1,18 @@
+// `timescale 1ns / 1ps
 module new_binary_clock(
     input clk_100MHz,                   // sys clock
     input reset,                        // reset clock
     input tick_hr,                      // to increment hours
     input tick_min,                     // to increment minutes
-    input set_am_pm,                    // to set AM or PM
     output tick_1Hz,                    // 1Hz output signal
-    output am_pm,
-    output end_of_day,                  // 11:59:59 PM
     output [3:0] sec_1s, sec_10s,       // BCD outputs for seconds
     output [3:0] min_1s, min_10s,       // BCD outputs for minutes
     output [3:0] hr_1s, hr_10s          // BCD outputs for hours
     );
     
 	// signals for button debouncing
-	reg a, b, c, d, e, f, g, h, i;
-	wire db_hr, db_min, db_am_pm;
+	reg a, b, c, d, e, f;
+	wire db_hr, db_min;
 	
 	// debounce tick hour button input
 	always @(posedge clk_100MHz) begin
@@ -32,14 +30,6 @@ module new_binary_clock(
 	end
 	assign db_min = f;
 	
-	// debounce am / pm button input
-	always @(posedge clk_100MHz) begin
-	   g <= set_am_pm;
-	   h <= g;
-	   i <= h;
-	end
-	assign db_am_pm = i;
-	
     // ********************************************************
     // create the 1Hz signal
     reg [31:0] ctr_1Hz = 32'h0;
@@ -49,10 +39,7 @@ module new_binary_clock(
         if(reset)
             ctr_1Hz <= 32'h0;
         else
-            // if(ctr_1Hz == 49_999_999) begin
-            //     ctr_1Hz <= 32'h0;
-            //     r_1Hz <= ~r_1Hz;
-            if(ctr_1Hz == 1) begin
+            if(ctr_1Hz == 1) begin //49_999_999
                 ctr_1Hz <= 32'h0;
                 r_1Hz <= ~r_1Hz;
             end
@@ -60,17 +47,13 @@ module new_binary_clock(
                 ctr_1Hz <= ctr_1Hz + 1;
      
     // ********************************************************
-    // regs for each time value and am/pm reg
+    // regs for each time value
     reg [5:0] seconds_ctr = 6'b0;   // 0
     reg [5:0] minutes_ctr = 6'b0;   // 0
-    reg [3:0] hours_ctr = 4'hc;     // 12
-    reg am_pm_reg = 1'b0;           // AM  
-    
-    // signal for am/pm reg control, marks end of 12 hour period
-    wire switch_am_pm = ((hours_ctr == 11) && (minutes_ctr == 59) && (seconds_ctr == 59)) ? 1 : 0;        
+    reg [4:0] hours_ctr = 5'h17;// 23 --- 4'hc;     // 12
 	
 	// seconds counter reg control
-    always @(posedge tick_1Hz or posedge reset)     // tick_1Hz
+    always @(posedge tick_1Hz or posedge reset)
         if(reset)
             seconds_ctr <= 6'b0;
         else
@@ -80,11 +63,10 @@ module new_binary_clock(
                 seconds_ctr <= seconds_ctr + 1;
             
     // minutes counter reg control       
-    always @(posedge tick_1Hz or posedge reset)      // tick_1Hz
+    always @(posedge tick_1Hz or posedge reset)
         if(reset)
             minutes_ctr <= 6'b0;
         else 
-//            if(seconds_ctr == 59)
             if(db_min | (seconds_ctr == 59))
                 if(minutes_ctr == 59)
                     minutes_ctr <= 6'b0;
@@ -92,25 +74,15 @@ module new_binary_clock(
                     minutes_ctr <= minutes_ctr + 1;
                     
     // hours counter reg control
-    always @(posedge tick_1Hz or posedge reset)      // tick_1Hz
+    always @(posedge tick_1Hz or posedge reset)
         if(reset)
-            hours_ctr <= 4'hc;  // 12
+            hours_ctr <= 5'h17;// 4'hc;  // 12
         else 
-//            if(minutes_ctr == 59 && seconds_ctr == 59)
             if(db_hr | (minutes_ctr == 59 && seconds_ctr == 59))
-                if(hours_ctr == 12)
-                    hours_ctr <= 4'h1;
+                if(hours_ctr == 23)
+                    hours_ctr <= 5'h0;
                 else
                     hours_ctr <= hours_ctr + 1;
-       
-    // AM/PM reg control
-    always @(posedge tick_1Hz or posedge reset)      // tick_1Hz
-        if(reset)
-            am_pm_reg = 0;
-        else
-//            if(switch_am_pm)
-            if(db_am_pm | switch_am_pm)
-                am_pm_reg <= ~am_pm_reg;   
                     
     // ********************************************************                
     // convert binary values to output bcd values
@@ -119,15 +91,9 @@ module new_binary_clock(
     assign min_10s = minutes_ctr / 10;
     assign min_1s  = minutes_ctr % 10;
     assign hr_10s  = hours_ctr   / 10;
-    assign hr_1s   = hours_ctr   % 10; 
-        
-    // ******************************************************** 
+    assign hr_1s   = hours_ctr   % 10;     
+     
     // 1Hz output            
     assign tick_1Hz = r_1Hz; 
-    
-    // End of day output
-    assign end_of_day = ((hours_ctr == 11) && (minutes_ctr == 59) && (seconds_ctr == 59) && (am_pm_reg == 1)) ? 1 : 0;
-         
-    // AM/PM output signal     
-    assign am_pm = am_pm_reg;        
+            
 endmodule
