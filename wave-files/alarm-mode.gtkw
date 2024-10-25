@@ -1,0 +1,44 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Fri Oct 25 05:49:18 2024
+[*]
+[dumpfile] "C:\Users\hoduc\Documents\Projects\FPGA\Alarm_Clock_Simulation\wave-files\digital_clock_tb.vcd"
+[savefile] "C:\Users\hoduc\Documents\Projects\FPGA\Alarm_Clock_Simulation\wave-files\alarm-mode.gtkw"
+[timestart] 0
+[size] 1475 806
+[pos] 1362 -113
+*-17.000000 239800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] digital_clock_tb.
+[sst_width] 211
+[signals_width] 174
+[sst_expanded] 1
+[sst_vpaned_height] 227
+@28
+digital_clock_tb.clock.clk_100MHz
+@23
+[color] 3
+digital_clock_tb.clock.hr_10s[3:0]
+[color] 3
+digital_clock_tb.clock.hr_1s[3:0]
+[color] 3
+digital_clock_tb.clock.min_10s[3:0]
+[color] 3
+digital_clock_tb.clock.min_1s[3:0]
+@28
+[color] 2
+digital_clock_tb.clock.set_alarm
+[color] 2
+digital_clock_tb.clock.alarm_en
+@22
+[color] 3
+digital_clock_tb.clock.alarm_hr_10s[3:0]
+[color] 3
+digital_clock_tb.clock.alarm_hr_1s[3:0]
+[color] 3
+digital_clock_tb.clock.alarm_min_10s[3:0]
+[color] 3
+digital_clock_tb.clock.alarm_min_1s[3:0]
+@28
+digital_clock_tb.clock.buzzer
+[pattern_trace] 1
+[pattern_trace] 0

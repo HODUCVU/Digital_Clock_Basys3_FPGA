@@ -31,8 +31,14 @@ module digital_clock_tb();
     initial begin 
         reset <= 1;
         tick_hr <= 0; tick_min <= 0; 
+        set_alarm <= 0; alarm_en <= 0;
+
         #(2*T);
         reset <= 0;
+        #(14*T*4)
+        alarm_en <= 1;
+        #(14*T*4)
+        alarm_en <= 0;
         // modify minutes and hours
         // tick_min <= 1;
         // #(14*T*4)
