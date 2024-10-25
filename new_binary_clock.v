@@ -58,7 +58,10 @@ module new_binary_clock(
     reg [5:0] seconds_ctr = 6'b0;   // 0
     reg [5:0] minutes_ctr = 6'b0;   // 0
     reg [4:0] hours_ctr = 5'h17;    // 23 
-	
+	// regs alarm mode
+    //new
+    reg [5:0] alarm_minutes_ctr = 6'b0;   // 0
+    reg [4:0] alarm_hours_ctr = 5'h17;    // 23 
 	// seconds counter reg control
     always @(posedge tick_1Hz or posedge reset)
         if(reset)
@@ -73,23 +76,37 @@ module new_binary_clock(
     always @(posedge tick_1Hz or posedge reset)
         if(reset)
             minutes_ctr <= 6'b0;
-        else 
+        else begin
             if(db_min | (seconds_ctr == 59))
                 if(minutes_ctr == 59)
                     minutes_ctr <= 6'b0;
                 else
                     minutes_ctr <= minutes_ctr + 1;
+            //new
+            if(db_min && set_alarm) 
+                if(alarm_minutes_ctr == 59)
+                    alarm_minutes_ctr <= 6'b0;
+                else 
+                    alarm_minutes_ctr <= alarm_minutes_ctr + 1;
+        end
                     
     // hours counter reg control
     always @(posedge tick_1Hz or posedge reset)
         if(reset)
             hours_ctr <= 5'h17;
-        else 
+        else begin
             if(db_hr | (minutes_ctr == 59 && seconds_ctr == 59))
                 if(hours_ctr == 23)
                     hours_ctr <= 5'h0;
                 else
                     hours_ctr <= hours_ctr + 1;
+            //new
+            if(db_hr && set_alarm) 
+                if(alarm_hours_ctr == 23)
+                    alarm_hours_ctr <= 5'h0;
+                else 
+                    alarm_hours_ctr <= alarm_hours_ctr + 1;
+        end
                     
     // ********************************************************                
     // convert binary values to output bcd values
@@ -100,11 +117,12 @@ module new_binary_clock(
     assign hr_10s  = hours_ctr   / 10;
     assign hr_1s   = hours_ctr   % 10;     
     
+    //new
     // Alarm values
-    assign alarm_min_10s=   (set_alarm == 1'b1) ? minutes_ctr / 10 : 0;  
-    assign alarm_min_1s =   (set_alarm == 1'b1) ? minutes_ctr % 10 : 0;
-    assign alarm_hr_10s =   (set_alarm == 1'b1) ? hours_ctr / 10 : 0;  
-    assign alarm_hr_1s  =   (set_alarm == 1'b1) ? hours_ctr % 10 : 0;
+    assign alarm_min_10s=   alarm_minutes_ctr / 10;  
+    assign alarm_min_1s =   alarm_minutes_ctr % 10;
+    assign alarm_hr_10s =   alarm_hours_ctr / 10;  
+    assign alarm_hr_1s  =   alarm_hours_ctr % 10;
     // 1Hz output            
     assign tick_1Hz = r_1Hz; 
             
