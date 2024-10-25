@@ -5,9 +5,16 @@ module new_binary_clock(
     input tick_hr,                      // to increment hours
     input tick_min,                     // to increment minutes
     output tick_1Hz,                    // 1Hz output signal
+    //
+    input set_alarm, // Alarm mode
+    //
     output [3:0] sec_1s, sec_10s,       // BCD outputs for seconds
     output [3:0] min_1s, min_10s,       // BCD outputs for minutes
-    output [3:0] hr_1s, hr_10s          // BCD outputs for hours
+    output [3:0] hr_1s, hr_10s,         // BCD outputs for hours
+    //
+    output [3:0] alarm_min_1s, alarm_min_10s,       // Alarm outputs for minutes
+    output [3:0] alarm_hr_1s, alarm_hr_10s,         // Alarm outputs for hours
+    //
     );
     
 	// signals for button debouncing
@@ -50,7 +57,7 @@ module new_binary_clock(
     // regs for each time value
     reg [5:0] seconds_ctr = 6'b0;   // 0
     reg [5:0] minutes_ctr = 6'b0;   // 0
-    reg [4:0] hours_ctr = 5'h17;// 23 --- 4'hc;     // 12
+    reg [4:0] hours_ctr = 5'h17;    // 23 
 	
 	// seconds counter reg control
     always @(posedge tick_1Hz or posedge reset)
@@ -76,7 +83,7 @@ module new_binary_clock(
     // hours counter reg control
     always @(posedge tick_1Hz or posedge reset)
         if(reset)
-            hours_ctr <= 5'h17;// 4'hc;  // 12
+            hours_ctr <= 5'h17;
         else 
             if(db_hr | (minutes_ctr == 59 && seconds_ctr == 59))
                 if(hours_ctr == 23)
@@ -92,7 +99,12 @@ module new_binary_clock(
     assign min_1s  = minutes_ctr % 10;
     assign hr_10s  = hours_ctr   / 10;
     assign hr_1s   = hours_ctr   % 10;     
-     
+    
+    // Alarm values
+    assign alarm_min_10s=   (set_alarm == 1'b1) ? minutes_ctr / 10 : 0;  
+    assign alarm_min_1s =   (set_alarm == 1'b1) ? minutes_ctr % 10 : 0;
+    assign alarm_hr_10s =   (set_alarm == 1'b1) ? hours_ctr / 10 : 0;  
+    assign alarm_hr_1s  =   (set_alarm == 1'b1) ? hours_ctr % 10 : 0;
     // 1Hz output            
     assign tick_1Hz = r_1Hz; 
             

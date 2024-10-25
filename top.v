@@ -8,6 +8,11 @@ module top(
     input reset,            // btnC
     input tick_hr,          // btnL
     input tick_min,         // btnR
+    // 
+    input set_alarm,        // btnD or btnU
+    input alarm_en,         // sw[0]
+    output buzzer,
+    // 
     output hsync,           // to VGA Connector
     output vsync,           // to VGA Connector
     output [11:0] rgb       // to DAC, to VGA Connector
@@ -17,6 +22,10 @@ module top(
     wire [9:0] w_x, w_y;
     wire video_on, p_tick;
     wire [3:0] hr_10s, hr_1s, min_10s, min_1s, sec_10s, sec_1s;
+    // new
+    wire [3:0] alarm_hr_10s, alarm_hr_1s, alarm_min_10s, alarm_min_1s;
+    wire [3:0] show_hr_10s, show_hr_1s, show_min_10s, show_min_1s; show_sec_10s, show_sec_1s;
+    // 
     reg [11:0] rgb_reg;
     wire [11:0] rgb_next;
     
@@ -43,24 +52,55 @@ module top(
         .min_1s(min_1s),
         .min_10s(min_10s),
         .hr_1s(hr_1s),
-        .hr_10s(hr_10s)
+        .hr_10s(hr_10s),
+        // 
+        .set_alarm(set_alarm),
+        .alarm_min_1s(alarm_min_1s),
+        .alarm_min_10s(alarm_min_10s),
+        .alarm_hr_1s(alarm_hr_1s),
+        .alarm_hr_10s(alarm_hr_10s)
         );
-
+    always @(posedge clk_100MHz) begin 
+        if(set_alarm) begin 
+            show_hr_10s <= alarm_hr_10s;
+            show_hr_1s <= alarm_hr_1s;
+            show_min_10s <= alarm_min_10s;
+            show_min_1s <= alarm_min_1s;
+            show_sec_10s <= 0;
+            show_sec_1s <= 0;
+        end 
+        else begin 
+            show_hr_10s <= hr_10s;
+            show_hr_1s <= hr_1s;
+            show_min_10s <= min_10s;
+            show_min_1s <= min_1s;
+            show_sec_10s <= sec_10s;
+            show_sec_1s <= sec_1s;
+        end
+    end
     pixel_clk_gen pclk(
         .clk(clk_100MHz),
         .video_on(video_on),
         //.tick_1Hz(),
         .x(w_x),
         .y(w_y),
-        .sec_1s(sec_1s),
-        .sec_10s(sec_10s),
-        .min_1s(min_1s),
-        .min_10s(min_10s),
-        .hr_1s(hr_1s),
-        .hr_10s(hr_10s),
+        .sec_1s(show_sec_1s),
+        .sec_10s(show_sec_10s),
+        .min_1s(show_min_1s),
+        .min_10s(show_min_10s),
+        .hr_1s(show_hr_1s),
+        .hr_10s(show_hr_10s),
         .time_rgb(rgb_next)
         );
- 
+    
+    // Alarm buzzer
+    always @(posedge clk_100MHz) begin
+        if(alarm_en && alarm_hr_10s == hr_10s && alarm_hr_1s = hr_1s 
+        && alarm_min_10s == min_10s && alarm_min_1s == min_1s)
+        begin
+            buzzer <= ~buzzer;
+        end else buzzer <= 0;
+    end
     // rgb buffer
     always @(posedge clk_100MHz)
         if(p_tick)

@@ -1,3 +1,4 @@
 *.vcd
 *.vvp
 old_code/
+alarm.v
