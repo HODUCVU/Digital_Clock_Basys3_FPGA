@@ -5,7 +5,7 @@ module new_binary_clock(
     input tick_hr,                      // to increment hours
     input tick_min,                     // to increment minutes
     output tick_1Hz,                    // 1Hz output signal
-    //
+    //new
     input set_alarm, // Alarm mode
     //
     output [3:0] sec_1s, sec_10s,       // BCD outputs for seconds

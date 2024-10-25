@@ -8,7 +8,7 @@ module top(
     input reset,            // btnC
     input tick_hr,          // btnL
     input tick_min,         // btnR
-    // 
+    //new 
     input set_alarm,        // btnD or btnU
     input alarm_en,         // sw[0]
     output reg buzzer,
@@ -53,7 +53,7 @@ module top(
         .min_10s(min_10s),
         .hr_1s(hr_1s),
         .hr_10s(hr_10s),
-        // 
+        //new 
         .set_alarm(set_alarm),
         .alarm_min_1s(alarm_min_1s),
         .alarm_min_10s(alarm_min_10s),
@@ -66,6 +66,7 @@ module top(
     assign show_min_1s = (set_alarm == 1'b1) ? alarm_min_1s : min_1s;
     assign show_sec_10s = (set_alarm == 1'b1) ? 0 : sec_10s;
     assign show_sec_1s = (set_alarm == 1'b1) ? 0 : sec_1s;
+    
     pixel_clk_gen pclk(
         .clk(clk_100MHz),
         .video_on(video_on),
