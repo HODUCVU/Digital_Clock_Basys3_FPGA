@@ -1,5 +1,4 @@
  `timescale 1ns / 1ps
-// https://github.com/FPGADude/Digital-Design/tree/main/FPGA%20Projects/VGA%20Projects/VGA%20Digital%20Clock
 //`include "vga_controller.v"
 //`include "new_binary_clock.v"
 //`include "pixel_clk_gen.v"
