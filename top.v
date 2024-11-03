@@ -1,14 +1,13 @@
-// `timescale 1ns / 1ps
+ `timescale 1ns / 1ps
 // https://github.com/FPGADude/Digital-Design/tree/main/FPGA%20Projects/VGA%20Projects/VGA%20Digital%20Clock
-`include "vga_controller.v"
-`include "new_binary_clock.v"
-`include "pixel_clk_gen.v"
+//`include "vga_controller.v"
+//`include "new_binary_clock.v"
+//`include "pixel_clk_gen.v"
 module top(
     input clk_100MHz,       // 100MHz on Basys 3
     input reset,            // btnC
     input tick_hr,          // btnL
     input tick_min,         // btnR
-    //new 
     input set_alarm,        // btnD or btnU
     input alarm_en,         // sw[0]
     output reg buzzer,
@@ -53,7 +52,6 @@ module top(
         .min_10s(min_10s),
         .hr_1s(hr_1s),
         .hr_10s(hr_10s),
-        //new 
         .set_alarm(set_alarm),
         .alarm_min_1s(alarm_min_1s),
         .alarm_min_10s(alarm_min_10s),

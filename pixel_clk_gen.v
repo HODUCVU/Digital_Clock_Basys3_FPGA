@@ -1,5 +1,5 @@
-// `timescale 1ns / 1ps
-`include "clock_digit_rom.v"
+ `timescale 1ns / 1ps
+//`include "clock_digit_rom.v"
 module pixel_clk_gen(
     input clk,
     input video_on,

@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module vga_controller(
     input clk_100MHz,   // from Basys 3
     input reset,        // system reset

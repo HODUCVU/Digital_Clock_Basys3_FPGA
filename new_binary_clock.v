@@ -1,11 +1,10 @@
-// `timescale 1ns / 1ps
+ `timescale 1ns / 1ps
 module new_binary_clock(
     input clk_100MHz,                   // sys clock
     input reset,                        // reset clock
     input tick_hr,                      // to increment hours
     input tick_min,                     // to increment minutes
     output tick_1Hz,                    // 1Hz output signal
-    //new
     input set_alarm, // Alarm mode
     //
     output [3:0] sec_1s, sec_10s,       // BCD outputs for seconds
@@ -45,49 +44,52 @@ module new_binary_clock(
     always @(posedge clk_100MHz or posedge reset)
         if(reset)
             ctr_1Hz <= 32'h0;
-        else
-            if(ctr_1Hz == 1) begin //49_999_999
+        else begin
+            if(ctr_1Hz == 49_999_999) begin //49_999_999
                 ctr_1Hz <= 32'h0;
                 r_1Hz <= ~r_1Hz;
             end
             else
                 ctr_1Hz <= ctr_1Hz + 1;
+        end
      
     // ********************************************************
     // regs for each time value
     reg [5:0] seconds_ctr = 6'b0;   // 0
     reg [5:0] minutes_ctr = 6'b0;   // 0
     reg [4:0] hours_ctr = 5'h17;    // 23 
+
 	// regs alarm mode
-    //new
     reg [5:0] alarm_minutes_ctr = 6'b0;   // 0
     reg [4:0] alarm_hours_ctr = 5'h17;    // 23 
 	// seconds counter reg control
     always @(posedge tick_1Hz or posedge reset)
         if(reset)
             seconds_ctr <= 6'b0;
-        else
+        else begin
             if(seconds_ctr == 59)
                 seconds_ctr <= 6'b0;
             else
                 seconds_ctr <= seconds_ctr + 1;
+        end
             
     // minutes counter reg control       
     always @(posedge tick_1Hz or posedge reset)
         if(reset)
             minutes_ctr <= 6'b0;
         else begin
-            if((db_min && ~set_alarm) | (seconds_ctr == 59))
+            if((db_min && ~set_alarm) | (seconds_ctr == 59)) begin
                 if(minutes_ctr == 59)
                     minutes_ctr <= 6'b0;
                 else
                     minutes_ctr <= minutes_ctr + 1;
-            //new
-            if(db_min && set_alarm) 
+            end
+            if(db_min && set_alarm) begin
                 if(alarm_minutes_ctr == 59)
                     alarm_minutes_ctr <= 6'b0;
                 else 
                     alarm_minutes_ctr <= alarm_minutes_ctr + 1;
+            end
         end
                     
     // hours counter reg control
@@ -100,7 +102,6 @@ module new_binary_clock(
                     hours_ctr <= 5'h0;
                 else
                     hours_ctr <= hours_ctr + 1;
-            //new
             if(db_hr && set_alarm) 
                 if(alarm_hours_ctr == 23)
                     alarm_hours_ctr <= 5'h0;
@@ -117,7 +118,6 @@ module new_binary_clock(
     assign hr_10s  = hours_ctr   / 10;
     assign hr_1s   = hours_ctr   % 10;     
     
-    //new
     // Alarm values
     assign alarm_min_10s=   alarm_minutes_ctr / 10;  
     assign alarm_min_1s =   alarm_minutes_ctr % 10;
